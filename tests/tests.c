@@ -8,39 +8,58 @@
 #include "testing.h"
 #include "CHelpers.h"
 
-TEST(stringReadInt)
+#define ABS(x) ( (x) < 0 ) ? ( (x) * (-1.0) ) : (x)
+#define EPS 0.000001
+
+int cmp_float(double number, double expected)
 {
-    int number = stringReadInt("1234");
+    if( (ABS( number - expected )) > EPS ) return 0;
+    return 1;
+}
+
+
+TEST(strToInt)
+{
+    int number = strToInt("1234");
     ASSERT(number == 1234);
 
-    number = stringReadInt("1234.5667");
+    number = strToInt("1234.5667");
     ASSERT(number == 1234);
 }
 
-TEST(stringReadFloat)
+TEST(strToFloat)
 {
-    float number = stringReadFloat("1234.5667");
-    ASSERT(number == 1234.5667);
+    float number = strToFloat("1234.5667");
+    float expected = 1234.5667f;
+    ASSERT(cmp_float(number, expected));
 }
 
 
-TEST(stringReadDouble)
+TEST(strToDouble)
 {
-    double number  = stringReadDouble("123.4456632342323323232");
-    ASSERT( ((int) (number*1000)) == 123445 );
+    double number  = strToDouble("123.445663234232");
+    double expected = 123.445663234232;
+    ASSERT(cmp_float(number, expected));
 }
 
-TEST(stringReadLong)
+TEST(strToLong)
 {
-    long long number = stringReadLong("123455566767");
+    long long number = strToLong("123455566767");
+    long long expected = 123455566767ll;
 
-    ASSERT( number == 123455566767 );
+    ASSERT( number == expected);
+
 }
 
-TEST(stringReadUnsigned)
+TEST(strToUnsigned)
 {
-    unsigned number = stringReadUnsigned("1255566767");
-
-    ASSERT( number == 1255566767);
+    unsigned number = strToUnsigned("1255566767");
+    unsigned expected = 1255566767u;
+    ASSERT( number == expected);
 }
 
+
+TEST(strFromInt)
+{
+
+}

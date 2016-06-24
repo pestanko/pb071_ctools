@@ -5,14 +5,36 @@
 #include <malloc.h>
 #include "CHelpers.h"
 
+void stringDelete(char *string)
+{
+    free(string);
+}
+
+char *stringNew(size_t size)
+{
+    return (char*) malloc(sizeof(char) * (size + 1));
+}
+
+char *stringCopy(const char *string)
+{
+    if(!string){
+        return NULL;
+    }
+
+    char *nString = stringNew(strlen(string));
+    strcpy(nString, string);
+
+    return nString;
+}
+
 
 char *fileReadLine(FILE *file)
 {
 
-    if (!file) return NULL;
+    if (!file) {return NULL;}
     unsigned long alloc = 32;
     char *line = malloc(sizeof(char) * (alloc + 1));
-    if (!line) return NULL;
+    if (!line) {return NULL;}
     int c = 0;
 
     size_t i = 0;
@@ -28,6 +50,16 @@ char *fileReadLine(FILE *file)
 
     return  line;
 }
+
+char *stringJoin(char *pre, char *post)
+{
+    size_t len = strlen(pre) + strlen(post) + 1;
+    char *nString = stringNew(len);
+    strcpy(nString, pre);
+    strcat(nString, post);
+    return nString;
+}
+
 
 
 int fileReadInt(FILE *file)
@@ -120,41 +152,41 @@ long long readLong()
 }
 
 
-int         stringReadInt(char *str)
+int         strToInt(char *str)
 {
     int number = 0;
     sscanf(str, "%d", &number);
     return number;
 }
 
-double      stringReadDouble(char *str)
+double      strToDouble(char *str)
 {
     double number = 0;
     sscanf(str, "%Lf", &number);
     return number;
 }
 
-float       stringReadFloat(char *str)
+float       strToFloat(char *str)
 {
     float number = 0;
     sscanf(str, "%f", &number);
     return number;
 }
 
-char        stringReadChar(char *str)
+char        strToChar(char *str)
 {
     if(!str) return '\0';
     return str[0];
 }
 
-unsigned    stringReadUnsigned(char *str)
+unsigned    strToUnsigned(char *str)
 {
     unsigned number = 0;
     sscanf(str, "%u", &number);
     return number;
 }
 
-long long   stringReadLong(char *str)
+long long   strToLong(char *str)
 {
     long long number = 0;
     sscanf(str, "%lld", &number);
@@ -165,6 +197,35 @@ long long   stringReadLong(char *str)
 
 
 
+char *      strFromInt(int number)
+{
+
+}
+
+char *      strFromDouble(double number)
+{
+
+}
+
+char *      strFromFloat(float number)
+{
+
+}
+
+char *      strFromChar(char ch)
+{
+
+}
+
+char *      strFromUnsigned(unsigned number)
+{
+
+}
+
+char *      strFromLong(long long number)
+{
+
+}
 
 
 
