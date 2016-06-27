@@ -7,6 +7,9 @@
 
 #include <stdlib.h>
 
+#define UNION_CMP(a, b) (a).numberLong - (b).numberLong
+
+
 typedef union CNode_type {
     char        character;
     int         numberInteger;
@@ -22,33 +25,33 @@ typedef union CNode_type {
     long long   *prtLong;
     float       *ptrFloat;
     void        *ptrAny;
-} node_type_t;
+} value_t;
 
-static node_type_t NONE_VALUE = { .ptrAny = NULL };
+static value_t NONE_VALUE = { .ptrAny = NULL };
 
 
 
 enum enum_node_type {
-    N_CHAR,
-    N_INT,
-    N_DOUBLE,
-    N_LONG,
-    N_FLOAT,
-    N_UNSIGNED,
+    P_NONE = 0,
+    N_CHAR = 1,
+    N_INT = 2,
+    N_DOUBLE = 3,
+    N_LONG = 4,
+    N_FLOAT = 5,
+    N_UNSIGNED = 6,
 
-    P_STR,
-    P_INT,
-    P_DOUBLE,
-    P_UNSIGNED,
-    P_LONG,
-    P_FLOAT,
-    P_ANY,
-    P_NONE
+    P_STR = 10,
+    P_INT = 11,
+    P_DOUBLE = 12,
+    P_UNSIGNED = 13,
+    P_LONG = 14,
+    P_FLOAT = 15,
+    P_ANY = 100
 } ;
 
 typedef struct CVNode{
     enum enum_node_type eType;
-    node_type_t value;
+    value_t value;
 } vec_node_t;
 
 typedef struct CVector {
@@ -60,12 +63,21 @@ typedef struct CVector {
 
 
 vector_t    *vectorCreate();
+vector_t    *vectorCreateSize(size_t size);
+vector_t    *vectorPrepareSize(size_t size);
 void        vectorDestroy(vector_t * vec);
-void        vectorAdd(vector_t *vec, node_type_t value, enum enum_node_type type);
-node_type_t vectorGet(vector_t *vec, size_t index);
-void        vectorApply(vector_t *vec, void (*func)(node_type_t *, size_t ));
+void        vectorAdd(vector_t *vec, value_t value, enum enum_node_type type);
+value_t     vectorGet(vector_t *vec, size_t index);
+void        vectorSet(vector_t *vec, size_t index, value_t value, enum enum_node_type type);
+void        vectorApply(vector_t *vec, void (*func)(value_t *, size_t ));
 void        vectorMap(vector_t *vec, void *out,
-                        void (*func)(node_type_t *, size_t , void *));
+                        void (*func)(value_t *, size_t , void *));
+
+vec_node_t  *vectorFind(vector_t *vec, value_t value);
+size_t      vectorFindPos(vector_t *vec, value_t value);
+void        vectorDelete(vector_t *vec, value_t value);
+void        vectorDeletePos(vector_t *vec, size_t pos);
+vector_t    *vectorJoin(vector_t *first, vector_t *second);
 
 
 int         vectorGetInt(vector_t *vec, size_t index);
@@ -81,6 +93,8 @@ void        vectorAddUnsigned(vector_t *vec, unsigned value);
 void        vectorAddLongLong(vector_t *vec, long long value);
 void        vectorAddString(vector_t *vec, char *value);
 void        vectorAddAny(vector_t *vec, void *value);
+
+int         vectorValueCompare(value_t v1, value_t v2, enum enum_node_type type);
 
 
 

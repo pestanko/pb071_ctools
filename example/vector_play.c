@@ -7,7 +7,7 @@
 
 #define COUNT 3
 
-void free_elems(node_type_t *node, size_t index)
+void free_elems(value_t *node, size_t index)
 {
     index = index;
     free((*node).ptrAny);
@@ -15,18 +15,19 @@ void free_elems(node_type_t *node, size_t index)
 }
 
 
+
 int main(void)
 {
-    vector_t *vector = vectorCreate();
+    vector_t *vector = vectorCreateSize(10);
 
-    for(int i = 0; i < 10; i++) {
-        vectorAddAny(vector, malloc(sizeof(10) * 4));
-    }
 
-    vectorApply(vector, free_elems);
+    printf("SIZE: %lu", vector->size);
+    printf("\tALLOC_SIZE: %lu\n",vector->allocSize);
 
-    for(int i = 0; i < 10; i++) {
-        printf("%lu\n", (unsigned long) vector->container[i].value.ptrAny);
+    for(int i = 0; i < 10; i++)
+    {
+      vectorValueCompare(NONE_VALUE, vector->container[i].value, P_NONE);
+        vector->container[i].eType;
     }
 
     vectorDestroy(vector);

@@ -1,7 +1,7 @@
 cmake_minimum_required(VERSION 3.5)
 project(pb071_ctools)
-set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11 -g")
-set(CMAKE_C_FLAGS  "${CMAKE_C_FLAGS} -std=c99 -g")
+set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11 -g -Wall -Wextra -pedantic")
+set(CMAKE_C_FLAGS  "${CMAKE_C_FLAGS} -std=c99 -g -Wall -Wextra -pedantic")
 
 include_directories("include/")
 

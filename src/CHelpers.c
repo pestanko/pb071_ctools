@@ -2,17 +2,21 @@
 // Created by Peter Stanko on 6/23/16.
 //
 
-#include <malloc.h>
+#include <stdlib.h>
 #include "CHelpers.h"
+#include "i_memmgr.h"
+
+#define UNUSED(a) (a) = (a)
+
 
 void stringDelete(char *string)
 {
-    free(string);
+    MEM_FREE(string);
 }
 
 char *stringNew(size_t size)
 {
-    return (char*) malloc(sizeof(char) * (size + 1));
+    return (char*) MEM_ALLOC(sizeof(char) * (size + 1));
 }
 
 char *stringCopy(const char *string)
@@ -33,7 +37,7 @@ char *fileReadLine(FILE *file)
 
     if (!file) {return NULL;}
     unsigned long alloc = 32;
-    char *line = malloc(sizeof(char) * (alloc + 1));
+    char *line = (char*) MEM_ALLOC(sizeof(char) * (alloc + 1));
     if (!line) {return NULL;}
     int c = 0;
 
@@ -42,7 +46,7 @@ char *fileReadLine(FILE *file)
         line[i++] = (char) c;
         if ((i + 2) >= alloc) {
             alloc *= 2;
-            line = realloc(line, (alloc + 1) * sizeof(char));
+            line = MEM_REALLOC(line, (alloc + 1) * sizeof(char));
             if (line == NULL) return NULL;
         }
     }
@@ -131,7 +135,7 @@ int readInt()
 float readFloat()
 {
     return fileReadFloat(stdin);
-};
+}
 
 double readDouble()
 {
@@ -162,7 +166,7 @@ int         strToInt(char *str)
 double      strToDouble(char *str)
 {
     double number = 0;
-    sscanf(str, "%Lf", &number);
+    sscanf(str, "%lf", &number);
     return number;
 }
 
@@ -194,37 +198,46 @@ long long   strToLong(char *str)
 }
 
 
-
-
-
 char *      strFromInt(int number)
 {
-
+    char *str = stringNew(15);
+    sprintf(str, "%d", number);
+    return str;
 }
 
 char *      strFromDouble(double number)
 {
-
+    char *str = stringNew(30);
+    sprintf(str, "%lf", number);
+    return str;
 }
 
 char *      strFromFloat(float number)
 {
-
+    char *str = stringNew(15);
+    sprintf(str, "%f", number);
+    return str;
 }
 
 char *      strFromChar(char ch)
 {
-
+    char *str = stringNew(2);
+    sprintf(str, "%c", ch);
+    return str;
 }
 
 char *      strFromUnsigned(unsigned number)
 {
-
+    char *str = stringNew(15);
+    sprintf(str, "%u", number);
+    return str;
 }
 
 char *      strFromLong(long long number)
 {
-
+    char *str = stringNew(20);
+    sprintf(str, "%lld", number);
+    return str;
 }
 
 

@@ -38,7 +38,7 @@ TEST(vectorAdd)
 {
     vector_t *vector = vectorCreate();
 
-    node_type_t value;
+    value_t value;
     value.numberInteger = 1;
     vectorAdd(vector, value, N_INT);
     ASSERT(vector->container);
@@ -76,11 +76,11 @@ TEST(vectorAdd)
 TEST(vectorGet)
 {
     vector_t *vector = vectorCreate();
-    node_type_t value;
+    value_t value;
     value.numberInteger = 1;
     vectorAdd(vector, value, N_INT);
 
-    node_type_t res = vectorGet(vector, 0);
+    value_t res = vectorGet(vector, 0);
     ASSERT(res.numberInteger == 1);
 
     value.numberUnsigned = 2;
@@ -116,7 +116,7 @@ TEST(addGetType)
 }
 
 
-void free_elems(node_type_t *node, size_t index)
+void free_elems(value_t *node, size_t index)
 {
     index = index;
     free((*node).ptrAny);
@@ -140,7 +140,7 @@ TEST(vectorApply)
     vectorDestroy(vector);
 }
 
-void vector_sum(node_type_t *node, size_t index, void * out)
+void vector_sum(value_t *node, size_t index, void * out)
 {
     *((int*) out) += node->numberInteger;
 
@@ -160,6 +160,139 @@ TEST(vectorMap)
     vectorMap(vector, &out, vector_sum);
 
     ASSERT(out == 55);
+
+    vectorDestroy(vector);
+}
+
+TEST(vectorSet)
+{
+    vector_t *vector = vectorCreate();
+
+    for(int i = 1; i <= 10; i++) {
+        vectorAddInt(vector, i);
+    }
+
+    value_t val;
+    val.numberInteger = 5000;
+    vectorSet(vector, 5, val, N_INT);
+    ASSERT(vectorGetInt(vector, 5) == 5000);
+
+    vectorDestroy(vector);
+}
+
+
+
+TEST(vectorFind)
+{
+    vector_t *vector = vectorCreate();
+
+    for(int i = 1; i <= 10; i++) {
+        vectorAddInt(vector, i);
+    }
+
+    value_t val;
+    val.numberInteger = 5;
+    vec_node_t *node = vectorFind(vector, val);
+    ASSERT(vectorGetInt(vector, 5000) == NULL);
+    ASSERT(node == &(vector->container[4]));
+
+    vectorDestroy(vector);
+
+}
+
+TEST(vectorFindPos)
+{
+    vector_t *vector = vectorCreate();
+
+    for(int i = 1; i <= 10; i++) {
+        vectorAddInt(vector, i);
+    }
+
+    value_t val;
+    val.numberInteger = 5;
+    size_t n = vectorFindPos(vector, val);
+    ASSERT(n == 4);
+    val.numberInteger = 10000;
+    ASSERT(vectorFindPos(vector, val) == (size_t) (-1));
+
+    vectorDestroy(vector);
+}
+
+
+TEST(vectorDelete)
+{
+    vector_t *vector = vectorCreate();
+    for(int i = 1; i <= 10; i++) {
+        vectorAddInt(vector, i);
+    }
+
+    value_t value;
+    value.numberInteger = 5;
+
+    vectorDelete(vector, value);
+    ASSERT(vector->container[4].value.ptrAny == NULL);
+    ASSERT(vector->container[4].eType == P_NONE);
+
+    vectorDestroy(vector);
+}
+
+TEST(vectorDeletePos)
+{
+    vector_t *vector = vectorCreate();
+    for(int i = 1; i <= 10; i++) {
+        vectorAddInt(vector, i);
+    }
+
+
+    vectorDeletePos(vector, 4);
+    ASSERT(vector->container[4].value.ptrAny == NULL);
+    ASSERT(vector->container[4].eType == P_NONE);
+
+    vectorDestroy(vector);
+}
+
+TEST(vectorJoin)
+{
+    vector_t *first = vectorCreate();
+    vector_t *second = vectorCreate();
+
+    for(int i = 1; i <= 10; i++) {
+        vectorAddInt(first, i);
+    }
+
+    for(int i = 101; i <= 110; i++) {
+        vectorAddInt(second, i);
+    }
+
+    vector_t *vector = vectorJoin(first, second);
+    size_t size = first->size + second->size;
+    ASSERT(vector->size == size);
+    ASSERT(vector->allocSize == (size + 4));
+
+    for(int i = 0; i < first->size; i++)
+    {
+        ASSERT( vectorGetInt(first, i) == vectorGetInt(vector, i));
+        ASSERT(vectorGetInt(second, i) == vectorGetInt(vector, i+ first->size));
+    }
+
+    vectorDestroy(vector);
+    vectorDestroy(first);
+    vectorDestroy(second);
+}
+
+
+TEST(vectorCreateSize)
+{
+    vector_t *vector = vectorCreateSize(10);
+
+    ASSERT(vector->size == 10);
+    ASSERT(vector->allocSize == 20);
+
+    for(int i = 0; i < 10; i++)
+    {
+        ASSERT(vectorValueCompare(NONE_VALUE, vector->container[i].value, P_NONE) == 0);
+        ASSERT(vector->container[i].eType == P_NONE);
+    }
 
     vectorDestroy(vector);
 }
