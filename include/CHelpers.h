@@ -11,10 +11,12 @@
 #include <stdlib.h>
 #include <string.h>
 
-char *stringNew(size_t size);
-char *stringCopy(const char *string);
-void stringDelete(char *string);
-char *stringJoin(char *pre, char *post);
+char        *stringNew(size_t size);
+char        *stringCopy(const char *string);
+void        stringDelete(char *string);
+char        *stringJoin(char *pre, char *post);
+char        *stringFind(char *string, char *substr);
+
 
 char        *fileReadLine(FILE* file);
 int         fileReadInt(FILE *file);

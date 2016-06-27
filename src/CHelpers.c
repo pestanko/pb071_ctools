@@ -43,7 +43,7 @@ char *fileReadLine(FILE *file)
         if ((i + 2) >= alloc) {
             alloc *= 2;
             line = realloc(line, (alloc + 1) * sizeof(char));
-            if (*line == NULL) return NULL;
+            if (line == NULL) return NULL;
         }
     }
     line[i] = '\0';
